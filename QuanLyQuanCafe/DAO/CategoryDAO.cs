@@ -37,5 +37,10 @@ namespace QuanLyQuanCafe.DAO
 
             return list;
         }
+
+        public DataTable GetCategoryList()
+        {
+            return DataProvider.Instance.ExecuteQuery("select id, name from foodcategory");
+        }
     }
 }

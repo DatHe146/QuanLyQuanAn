@@ -17,14 +17,28 @@ namespace QuanLyQuanCafe
 {
     public partial class fTableManager : Form
     {
-        public fTableManager()
+        private Account loginAccount;
+
+        public Account LoginAccount {
+            get { return loginAccount; }
+            set { loginAccount = value; changeAccount(loginAccount.Type); }
+        }
+
+        public fTableManager(Account acc)
         {
             InitializeComponent();
-            LoadTable();
+            this.LoginAccount = acc;
 
+            LoadTable();
             loadCategory();
+            
         }
         #region Method
+
+        void changeAccount(int type)
+        {
+            adminToolStripMenuItem.Enabled = type == 1;
+        }
 
         void loadCategory()
         {
@@ -107,7 +121,7 @@ namespace QuanLyQuanCafe
 
         private void thôngTinToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            
         }
 
         private void đăngXuấtToolStripMenuItem_Click(object sender, EventArgs e)
@@ -117,7 +131,7 @@ namespace QuanLyQuanCafe
 
         private void thôngTinCáNhânToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            fAccountProfile f = new fAccountProfile();
+            fAccountProfile f = new fAccountProfile(loginAccount);
             f.ShowDialog();
         }
 
@@ -174,12 +188,13 @@ namespace QuanLyQuanCafe
             Table table = lsvBill.Tag as Table;
 
             int idBill = BillDAO.Instance.GetUncheckBillIDByTableID(table.ID);
-
+            double totalPrice = Convert.ToDouble(txbTotalPrice.Text.Split()[0]);
+            double finalTotalPrice = totalPrice;
             if (idBill != -1) 
             {
                 if(MessageBox.Show("Bạn có chắc muốn thanh toán hóa đơn cho bàn "+ table.Name, "Thông báo", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
                 {
-                    BillDAO.Instance.checkOut(idBill);
+                    BillDAO.Instance.checkOut(idBill,(float)finalTotalPrice);
                     showBill(table.ID);
 
                     LoadTable();

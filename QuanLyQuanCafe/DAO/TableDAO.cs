@@ -37,5 +37,10 @@ namespace QuanLyQuanCafe.DAO
             }
             return tableList;
         }
+
+        public DataTable GetListTable()
+        {
+            return DataProvider.Instance.ExecuteQuery("Select id, name, status from TableFood");
+        }
     }
 }

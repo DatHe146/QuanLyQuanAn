@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.Remoting.Messaging;
+using System.Text.RegularExpressions;
 
 namespace QuanLyQuanCafe.DAO
 {
@@ -58,7 +59,16 @@ namespace QuanLyQuanCafe.DAO
                 if (parameter != null)
                 {
                     string[] listPara = query.Split(' ');
+                    var matches = Regex.Matches(query, @"@\w+");
+
                     int i = 0;
+                    foreach (Match m in matches)
+                    {
+                        command.Parameters.AddWithValue(m.Value, parameter[i]);
+                        i++;
+                    }
+
+                    /*int i = 0;
                     foreach (string item in listPara)
                     {
                         if (item.Contains('@'))
@@ -66,7 +76,7 @@ namespace QuanLyQuanCafe.DAO
                             command.Parameters.AddWithValue(item, parameter[i]);
                             i++;
                         }
-                    }
+                    }*/
                 }
 
                 // PHẦN THỰC THI QUERY VÀ ĐỔ DỮ LIỆU (LUÔN CẦN THỰC HIỆN)
